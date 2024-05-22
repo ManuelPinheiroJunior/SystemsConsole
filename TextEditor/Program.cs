@@ -13,7 +13,6 @@ namespace TextEditor
         static void Menu()
         {
             Console.Clear();
-            Console.WriteLine("")
             Console.WriteLine("What do you want to do?");
             Console.WriteLine("1 - Open file");
             Console.WriteLine("2 - Create new file");
