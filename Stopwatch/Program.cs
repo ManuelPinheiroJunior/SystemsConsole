@@ -19,15 +19,32 @@ namespace Stopwatch
             Console.WriteLine("How long do you want to count?");
 
             string data = Console.ReadLine().ToLower();
-            char type = char.Parse(data.Substring(data.Length - 1, 1));
-            int time = int.Parse(data.Substring(0, data.Length - 1));
-            int multiplier = 1;
 
-            if (type == 'm')
-                multiplier = 60;
+            // Validating input
+            if (string.IsNullOrEmpty(data) || data.Length < 2)
+            {
+                Console.WriteLine("Invalid input. Please try again.");
+                Thread.Sleep(2000);
+                Menu();
+                return;
+            }
+
+            char type = data[^1]; // Using ^1 to get the last character
+            int time;
+
+            // Try to parse the time part of the input
+            if (!int.TryParse(data.Substring(0, data.Length - 1), out time))
+            {
+                Console.WriteLine("Invalid time format. Please try again.");
+                Thread.Sleep(2000);
+                Menu();
+                return;
+            }
 
             if (time == 0)
-                System.Environment.Exit(0);
+                Environment.Exit(0);
+
+            int multiplier = (type == 'm') ? 60 : 1;
 
             PreStart(time * multiplier);
         }
@@ -49,7 +66,7 @@ namespace Stopwatch
         {
             int currentTime = 0;
 
-            while (currentTime != time)
+            while (currentTime < time)
             {
                 Console.Clear();
                 currentTime++;
