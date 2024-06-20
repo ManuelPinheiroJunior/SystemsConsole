@@ -12,44 +12,43 @@ namespace TextEditor
 
         static void Menu()
         {
-            Console.Clear();
-            Console.WriteLine("What do you want to do?");
-            Console.WriteLine("1 - Open file");
-            Console.WriteLine("2 - Create new file");
-            Console.WriteLine("0 - Exit");
+            while (true)
+            {
+                Console.Clear();
+                Console.WriteLine("What do you want to do?");
+                Console.WriteLine("1 - Open file");
+                Console.WriteLine("2 - Create new file");
+                Console.WriteLine("0 - Exit");
 
-            if (short.TryParse(Console.ReadLine(), out short option))
-            {
-                switch (option)
+                if (short.TryParse(Console.ReadLine(), out short option))
                 {
-                    case 0:
-                        Environment.Exit(0);
-                        break;
-                    case 1:
-                        Open();
-                        break;
-                    case 2:
-                        Edit();
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option. Please try again.");
-                        Console.ReadLine(); // Wait for user to acknowledge before going back to menu
-                        Menu();
-                        break;
+                    switch (option)
+                    {
+                        case 0:
+                            Environment.Exit(0);
+                            break;
+                        case 1:
+                            Open();
+                            break;
+                        case 2:
+                            Edit();
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option. Please try again.");
+                            break;
+                    }
                 }
-            }
-            else
-            {
-                Console.WriteLine("Invalid option. Please try again.");
-                Console.ReadLine(); // Wait for user to acknowledge before going back to menu
-                Menu();
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a number.");
+                }
             }
         }
 
         static void Open()
         {
             Console.Clear();
-            Console.WriteLine("What is the file path?");
+            Console.WriteLine("Enter the file path:");
             string path = Console.ReadLine();
 
             try
@@ -67,7 +66,6 @@ namespace TextEditor
 
             Console.WriteLine("\nPress Enter to return to the menu.");
             Console.ReadLine();
-            Menu();
         }
 
         static void Edit()
@@ -77,28 +75,31 @@ namespace TextEditor
             Console.WriteLine("----------------");
             string text = "";
 
-            do
+            while (true)
             {
-                ConsoleKeyInfo key = Console.ReadKey();
+                var key = Console.ReadKey(intercept: true);
                 if (key.Modifiers == ConsoleModifiers.Control && key.Key == ConsoleKey.S)
                 {
                     Save(text);
+                    break;
                 }
-                else if (key.Key != ConsoleKey.Escape)
+                else if (key.Key == ConsoleKey.Escape)
+                {
+                    break;
+                }
+                else
                 {
                     text += key.KeyChar;
                     Console.Write(key.KeyChar);
                 }
-            } while (Console.ReadKey().Key != ConsoleKey.Escape);
-
-            Menu();
+            }
         }
 
         static void Save(string text)
         {
             Console.Clear();
-            Console.WriteLine("What is the path to save the file?");
-            var path = Console.ReadLine();
+            Console.WriteLine("Enter the path to save the file:");
+            string path = Console.ReadLine();
 
             try
             {
@@ -106,8 +107,7 @@ namespace TextEditor
                 {
                     file.Write(text);
                 }
-
-                Console.WriteLine($"File {path} saved successfully!");
+                Console.WriteLine($"File saved successfully at {path}!");
             }
             catch (Exception ex)
             {
@@ -116,7 +116,6 @@ namespace TextEditor
 
             Console.WriteLine("\nPress Enter to return to the menu.");
             Console.ReadLine();
-            Menu();
         }
     }
 }
