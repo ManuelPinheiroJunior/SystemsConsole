@@ -11,104 +11,72 @@ namespace Calculator
 
         static void Menu()
         {
-            Console.Clear();
-
-            Console.WriteLine("What do you want to do?");
-            Console.WriteLine("1 - Addition");
-            Console.WriteLine("2 - Subtraction");
-            Console.WriteLine("3 - Division");
-            Console.WriteLine("4 - Multiplication");
-            Console.WriteLine("5 - Exit");
-
-            Console.WriteLine("----------");
-            Console.WriteLine("Select an option: ");
-
-            short res = short.Parse(Console.ReadLine());
-
-            switch (res)
+            while (true)
             {
-                case 1: Add(); break;
-                case 2: Subtract(); break;
-                case 3: Divide(); break;
-                case 4: Multiply(); break;
-                case 5: System.Environment.Exit(0); break;
-                default: Menu(); break;
+                Console.Clear();
+                Console.WriteLine("What do you want to do?");
+                Console.WriteLine("1 - Addition");
+                Console.WriteLine("2 - Subtraction");
+                Console.WriteLine("3 - Division");
+                Console.WriteLine("4 - Multiplication");
+                Console.WriteLine("5 - Exit");
+                Console.WriteLine("----------");
+                Console.Write("Select an option: ");
+
+                if (short.TryParse(Console.ReadLine(), out short res))
+                {
+                    switch (res)
+                    {
+                        case 1: PerformOperation(Add); break;
+                        case 2: PerformOperation(Subtract); break;
+                        case 3: PerformOperation(Divide); break;
+                        case 4: PerformOperation(Multiply); break;
+                        case 5: Environment.Exit(0); break;
+                        default: Console.WriteLine("Invalid option. Try again."); break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a number between 1 and 5.");
+                }
             }
         }
 
-        static void Add()
+        static void PerformOperation(Func<float, float, float> operation)
         {
             Console.Clear();
 
-            Console.WriteLine("First value: ");
-            float v1 = float.Parse(Console.ReadLine());
+            float v1 = GetInput("First value: ");
+            float v2 = GetInput("Second value: ");
 
-            Console.WriteLine("Second value:");
-            float v2 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("");
-
-            float result = v1 + v2;
-            // Console.WriteLine("The result of the addition is " + result);
-            Console.WriteLine($"The result of the addition is {result}");
-            // Console.WriteLine($"The result of the addition is {v1 + v2}");
-            // Console.WriteLine("The result of the addition is " + (v1 + v2));
+            float result = operation(v1, v2);
+            Console.WriteLine($"\nThe result is {result}");
+            Console.WriteLine("Press any key to return to the menu.");
             Console.ReadKey();
-            Menu();
         }
 
-        static void Subtract()
+        static float GetInput(string prompt)
         {
-            Console.Clear();
-
-            Console.WriteLine("First value:");
-            float v1 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("Second value:");
-            float v2 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("");
-
-            float result = v1 - v2;
-            Console.WriteLine($"The result of the subtraction is {result}");
-            Console.ReadKey();
-            Menu();
+            float value;
+            Console.Write(prompt);
+            while (!float.TryParse(Console.ReadLine(), out value))
+            {
+                Console.Write("Invalid input. " + prompt);
+            }
+            return value;
         }
 
-        static void Divide()
+        static float Add(float v1, float v2) => v1 + v2;
+        static float Subtract(float v1, float v2) => v1 - v2;
+        static float Divide(float v1, float v2)
         {
-            Console.Clear();
-
-            Console.WriteLine("First value:");
-            float v1 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("Second value");
-            float v2 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("");
-
-            float result = v1 / v2;
-            Console.WriteLine($"The result of the division is {result}");
-            Console.ReadKey();
-            Menu();
+            if (v2 == 0)
+            {
+                Console.WriteLine("Cannot divide by zero. Returning zero as result.");
+                return 0;
+            }
+            return v1 / v2;
         }
-
-        static void Multiply()
-        {
-            Console.Clear();
-
-            Console.WriteLine("First value: ");
-            float v1 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("Second value: ");
-            float v2 = float.Parse(Console.ReadLine());
-
-            Console.WriteLine("");
-
-            float result = v1 * v2;
-            Console.WriteLine("The result of the multiplication is " + (v1 * v2));
-            Console.ReadKey();
-            Menu();
-        }
+        static float Multiply(float v1, float v2) => v1 * v2;
     }
 }
